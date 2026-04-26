@@ -1,1 +1,10 @@
-# pet_project_ui_and_api_tests
+Python Automation Framework (UI + API)
+
+Репозиторий с примерами автотестов для UI и API уровней. Проект построен на современных инструментах с акцентом на скорость выполнения и чистоту кода.
+🛠 Стек технологий
+Язык: Python 3.10+
+UI тесты: Playwright 
+API тесты: HTTPX 
+Тестовый движок: Pytest
+Отчетность: Allure Report
+CI/CD: GitHub Actions
