@@ -8,3 +8,5 @@ API тесты: HTTPX
 Тестовый движок: Pytest
 Отчетность: Allure Report
 CI/CD: GitHub Actions
+
+Тестовый стенд: https://automationexercise.com/
