@@ -1,0 +1,23 @@
+import time
+
+from ui.fixtures.page_fixtures import main_page
+
+
+def test_guest_can_create_account(login_page, signup_page,main_page):
+    login_page.open()
+    login_page.go_to_signup()
+    signup_page.check_url()
+    signup_page.create_user()
+    signup_page.checking_successful_account_creation()
+    signup_page.click_continue()
+    main_page.check_url()
+    main_page.should_be_logged_in()
+
+def test_login_user_with_correct_email_and_password(login_page, create_account):
+    login_page.logout()
+    login_page.should_be_login_and_forms()
+    login_page.login(
+        email=create_account["email"],
+        password=create_account["password"]
+    )
+    login_page.should_be_logged_in()

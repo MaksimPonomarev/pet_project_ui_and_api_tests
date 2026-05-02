@@ -3,7 +3,7 @@ import os
 from dotenv import load_dotenv
 from playwright.sync_api import expect
 from ui.pages.base_page import BasePage
-from ui.pages.locators import BasePageLocators, LoginPageLocators
+from ui.pages.locators import BasePageLocators
 
 load_dotenv()
 
@@ -17,15 +17,13 @@ class MainPage(BasePage):
         cookie_banner.wait_for(timeout=15000, state="attached")
 
     def accept_cookie_banner(self):
-        accept_btn = self.page.locator(BasePageLocators.ACCEPT_COOKIE_BANNER_BTN)
         cookie_banner = self.page.locator(BasePageLocators.COOKIE_BANNER)
         cookie_banner.wait_for(timeout=15000, state="visible")
-        accept_btn.click(timeout=15000)
+        self.click(selector=BasePageLocators.ACCEPT_COOKIE_BANNER_BTN)
         expect(cookie_banner).to_be_hidden(timeout=15000)
 
     def should_be_login_link_enable(self):
-        login_button = self.page.locator(BasePageLocators.LOGIN_LINK)
-        expect(login_button).to_be_visible(timeout=15000)
+        login_button = self.elem_must_be_visible(BasePageLocators.LOGIN_LINK)
         expect(login_button).to_have_attribute("href", "/login")
 
     def should_be_head_of_site(self):
