@@ -33,6 +33,8 @@ class LoginPageLocators:
     SIGNUP_NAME_AREA = "[data-qa=signup-name]"
     SIGNUP_EMAIL_AREA = "[data-qa=signup-email]"
     SIGNUP_BTN = "[data-qa=signup-button]"
+    INCORRECT_LOGIN_ERROR = "Your email or password is incorrect!"
+    INCORRECT_SIGNUP_ERROR = "Email Address already exist!"
 
 
 class SignupPageLocators:
@@ -58,3 +60,14 @@ class SignupPageLocators:
     CREATE_ACCOUNT_BTN = "[data-qa=create-account]"
     ACCOUNT_CREATED_MESSAGE = "[data-qa=account-created]"
     CONTINUE_BTN = "[data-qa=continue-button]"
+
+class ContactUsPageLocators:
+    GET_IN_TOUCH_TITLE = "Get In Touch"
+    NAME = "[data-qa=name]"
+    EMAIL = "[data-qa=email]"
+    SUBJECT = "[data-qa=subject]"
+    MESSAGE = "[data-qa=message]"
+    INPUT_FILE = "input[type=file]"
+    SUBMIT_BTN = "[data-qa=submit-button]"
+    SUCCESS_MESSAGE_LOCATOR = ".status.alert.alert-success"
+    SUCCESS_MESSAGE_TEXT = "Success! Your details have been submitted successfully."

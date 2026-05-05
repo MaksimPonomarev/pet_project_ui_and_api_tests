@@ -14,20 +14,20 @@ class MainPage(BasePage):
 
     def should_be_cookie_banner(self):
         cookie_banner = self.page.locator(BasePageLocators.COOKIE_BANNER)
-        cookie_banner.wait_for(timeout=15000, state="attached")
+        cookie_banner.wait_for(state="attached")
 
     def accept_cookie_banner(self):
         cookie_banner = self.page.locator(BasePageLocators.COOKIE_BANNER)
-        cookie_banner.wait_for(timeout=15000, state="visible")
+        cookie_banner.wait_for(state="visible")
         self.click(selector=BasePageLocators.ACCEPT_COOKIE_BANNER_BTN)
-        expect(cookie_banner).to_be_hidden(timeout=15000)
+        expect(cookie_banner).to_be_hidden()
 
     def should_be_login_link_enable(self):
         login_button = self.elem_must_be_visible(BasePageLocators.LOGIN_LINK)
         expect(login_button).to_have_attribute("href", "/login")
 
     def should_be_head_of_site(self):
-        expect(self.page.locator(BasePageLocators.PANEL_OF_TABS)).to_be_visible(timeout=15000)
+        expect(self.page.locator(BasePageLocators.PANEL_OF_TABS)).to_be_visible()
 
         nav_items = [
             (BasePageLocators.HOME_LINK, "Home"),
@@ -41,6 +41,6 @@ class MainPage(BasePage):
         ]
 
         for selector, text in nav_items:
-            expect(self.page.locator(selector=selector, has_text=text)).to_be_visible(timeout=15000)
+            expect(self.page.locator(selector=selector, has_text=text)).to_be_visible()
 
 

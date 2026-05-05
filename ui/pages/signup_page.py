@@ -14,7 +14,7 @@ class SignupPage(BasePage):
         data = fake.date_of_birth()
 
         self.click(selector=SignupPageLocators.TITLE_MR if fake.title() == 1 else SignupPageLocators.TITLE_MRS)
-        self.enter_data(selector=SignupPageLocators.NAME, text=fake.name())
+        name = self.enter_data(selector=SignupPageLocators.NAME, text=fake.name())
         password = self.enter_data(selector=SignupPageLocators.PASSWORD, text=fake.password())
         self.select_elem_in_dropdown(selector=SignupPageLocators.DAYS, value=data["day"])
         self.select_elem_in_dropdown(selector=SignupPageLocators.MONTHS, value=data["month"])
@@ -30,7 +30,7 @@ class SignupPage(BasePage):
         self.enter_data(selector=SignupPageLocators.ZIPCODE, text=fake.zipcode())
         self.enter_data(selector=SignupPageLocators.MOBILE_NUMBER, text=fake.mobile_number())
         self.click(selector=SignupPageLocators.CREATE_ACCOUNT_BTN)
-        return {"password": password}
+        return {"password": password, "name": name}
 
     def checking_successful_account_creation(self):
         self.check_url(endpoint="/account_created")

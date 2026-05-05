@@ -1,7 +1,7 @@
 import os
 from dotenv import load_dotenv
 from playwright.sync_api import expect
-from ui.pages.locators import BasePageLocators
+from ui.pages.locators import BasePageLocators, LoginPageLocators
 
 load_dotenv()
 BASE_URL = os.getenv("BASE_URL")
@@ -23,23 +23,29 @@ class BasePage:
 
     def check_url(self, endpoint=None):
         expected_url = f"{BASE_URL}{endpoint or self.ENDPOINT}"
-        assert self.page.url == expected_url, f"Ожидали {expected_url}, но попали на {self.page.url}"
+        expect(self.page).to_have_url(expected_url)
 
     def click(self, selector):
         el = self.page.locator(selector=selector)
-        expect(el).to_be_enabled(timeout=15000)
+        expect(el).to_be_enabled()
         el.click()
 
     def elem_must_be_visible(self, selector):
         elem = self.page.locator(selector=selector)
-        expect(elem).to_be_visible(timeout=15000)
+        expect(elem).to_be_visible()
         return elem
+
+    def should_be_logged_out(self):
+        expect(self.page.locator(BasePageLocators.LOGIN_LINK)).to_be_visible()
+
+    def logout(self):
+        self.click(selector=BasePageLocators.LOGOUT_LINK)
 
     def select_elem_in_dropdown(self, selector, value):
         self.page.locator(selector=selector).select_option(value=value)
 
     def open(self):
-        self.page.goto(f"{BASE_URL}{self.ENDPOINT}")
+        self.page.goto(f"{BASE_URL}{self.ENDPOINT}", timeout=30000)
 
     def go_to_home(self):
         self.page.locator(selector=BasePageLocators.HOME_LINK).click()

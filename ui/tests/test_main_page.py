@@ -18,5 +18,5 @@ def test_check_site_header(main_page):
 def test_guest_can_go_to_login(main_page, login_page):
     main_page.open()
     main_page.go_to_login()
-    login_page.should_be_login_and_forms()
+    login_page.should_be_logged_out()
     login_page.check_url()
