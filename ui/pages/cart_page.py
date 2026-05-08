@@ -23,6 +23,45 @@ class CartPage(BasePage):
         self.check_url()
 
     def should_be_filled_cart(self):
-        self.elem_should_be_visible(selector=CartPageLocators.TABLE_ITEMS)
+        self.elem_should_be_visible(selector=CartPageLocators.CART_INFO)
         self.elem_should_be_visible(selector=CartPageLocators.CHECKOUT_BTN)
         self.check_url()
+
+    def get_total_price(self, product_price, product_quantity):
+        price = float(product_price.replace("Rs.", "").strip())
+        quantity = int(product_quantity)
+        return price * quantity
+
+    def format_price(self, price):
+        return float(price.replace("Rs.", "").strip())
+
+
+    def check_quantity(self, item_id, expect_quantity):
+        actual_quantity = self.get_text_by_locator(selector=CartPageLocators.product_quantity(item_id))
+        self.assert_equal(int(actual_quantity), expect_quantity)
+
+    def check_added_products(self, cart_items):
+        assert cart_items, "cart_items пустой"
+        for id_product, product_info in cart_items.items():
+            self.elem_should_be_visible(selector=CartPageLocators.id_card(id_product))
+
+            product_name = self.get_text_by_locator(selector=CartPageLocators.product_name(id_product))
+            product_price = self.get_text_by_locator(selector=CartPageLocators.product_price(id_product))
+            product_quantity = self.get_text_by_locator(selector=CartPageLocators.product_quantity(id_product))
+            product_total = self.get_text_by_locator(selector=CartPageLocators.product_total_price(id_product))
+
+
+            self.assert_equal(product_info["name"], product_name)
+            self.assert_equal(self.format_price(product_info["price"]), self.format_price(product_price))
+            self.assert_equal(product_info["count"], int(product_quantity))
+            self.assert_equal(self.get_total_price(product_price, product_quantity), self.format_price(product_total))
+
+
+    def go_to_login_page_from_checkout_form(self):
+        self.click(CartPageLocators.CHECKOUT_BTN)
+        self.click(CartPageLocators.LOGIN_LINK_IN_CHECKOUT)
+
+    def checkout_logged_in_user(self):
+        self.click(CartPageLocators.CHECKOUT_BTN)
+
+

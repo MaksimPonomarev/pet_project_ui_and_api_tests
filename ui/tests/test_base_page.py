@@ -1,6 +1,5 @@
 import re
-import time
-
+import pytest
 from playwright.sync_api import expect
 
 
@@ -22,11 +21,11 @@ def test_go_to_products_page(main_page, products_page):
     products_page.should_be_product_page()
 
 
-def test_go_to_empty_cart_page(main_page, empty_cart_page):
+def test_go_to_cart_page(main_page, cart_page):
     main_page.open()
     main_page.should_be_main_page()
     main_page.go_to_cart()
-    empty_cart_page.should_be_empty_cart()
+    cart_page.should_be_empty_cart()
 
 
 def test_go_to_filled_cart_page(filled_cart, main_page,filled_cart_page):
@@ -81,3 +80,11 @@ def test_go_to_details_product_from_main_page(main_page, detail_products_page):
     main_page.should_be_main_page()
     main_page.open_product_card_detail()
     detail_products_page.should_be_product_detail_page()
+
+@pytest.mark.parametrize("page_fixture", ["main_page", "cart_page"])
+def test_check_footer(page_fixture, request):
+    page = request.getfixturevalue(page_fixture)
+    page.open()
+    page.should_be_footer()
+    page.check_subscribe_in_footer()
+    page.should_be_footer_subscribe_success()

@@ -1,9 +1,13 @@
 import os
+import re
+
 from dotenv import load_dotenv
 from playwright.sync_api import expect
 
 from config import settings
 from ui.pages.locators import BasePageLocators, LoginPageLocators, ContactUsPageLocators
+from ui.test_data.data import SuccessMessageText
+from ui.tools.faker import fake
 
 load_dotenv()
 BASE_URL = os.getenv("BASE_URL")
@@ -12,12 +16,28 @@ class BasePage:
     ENDPOINT = ""
     def __init__(self, page):
         self.page = page
+        self.cart_items = {}
 
-    def should_be_visible_with_text(self, text, selector=None):
+    def should_be_visible_with_text(self, text, selector=None, root=None):
+        locator = root or self.page
         if selector:
-            expect(self.page.locator(selector).filter(has_text=text)).to_be_visible()
+            expect(locator.locator(selector).filter(has_text=text)).to_be_visible()
         else:
-            expect(self.page.get_by_text(text)).to_be_visible()
+            expect(locator.get_by_text(text)).to_be_visible()
+
+    def get_inner_text(self, selector=None, root=None):
+        locator = root or self.page
+        if selector:
+            return locator.locator(selector).inner_text()
+        return locator.inner_text()
+
+
+    def should_be_visible_inner_text(self, text, selector=None, root=None):
+        locator = root or self.page
+        if selector:
+            expect(locator.locator(selector).filter(has_text=text)).to_be_visible()
+        else:
+            expect(locator.inner_text(text)).to_be_visible()
 
     def should_be_logged_in(self):
         self.elem_should_be_visible(selector=BasePageLocators.LOGOUT_LINK)
@@ -39,10 +59,11 @@ class BasePage:
 
     def check_url(self, endpoint=None):
         expected_url = f"{BASE_URL}{endpoint or self.ENDPOINT}"
-        expect(self.page).to_have_url(expected_url)
+        expect(self.page).to_have_url(re.compile(expected_url))
 
-    def click(self, selector, index=0):
-        el = self.page.locator(selector=selector).nth(index)
+    def click(self, selector, root=None, num_of_card=1):
+        locator = root or self.page
+        el = locator.locator(selector).nth(num_of_card-1)
         expect(el).to_be_enabled()
         el.click()
 
@@ -93,16 +114,50 @@ class BasePage:
         self.click(selector=BasePageLocators.LOGOUT_LINK)
 
     def select_elem_in_dropdown(self, selector, value):
-        self.page.locator(selector=selector).select_option(value=value)
+        result = self.page.locator(selector=selector).select_option(value=value)
+        return result[0] if result else None
+
 
     def open(self):
         self.page.goto(f"{BASE_URL}{self.ENDPOINT}", timeout=settings.navigation_timeout)
 
+    def get_text_by_locator(self, selector, root=None):
+        locator = root or self.page
+        return locator.locator(selector).text_content()
 
-    def add_first_product_to_cart(self):
-        self.page.locator(selector=BasePageLocators.ADD_TO_CART_BTN).first.hover()
-        self.page.locator(selector=BasePageLocators.ADD_TO_CART_BTN).nth(0).click()
+    def get_text_by_attribute_for_locator(self, selector, attribute, root=None):
+        locator = root or self.page
+        return locator.locator(selector).get_attribute(attribute)
+
+
+    def hover(self, selector, root=None):
+        locator = root or self.page
+        locator.locator(selector).hover()
+
+    def accept_continue_shopping_btn(self):
         self.click(selector=BasePageLocators.CONTINUE_SHOPPING_BTN)
+
+
+    def add_product_to_cart(self, num_of_card=1):
+        num_of_card -= 1
+        card = self.page.locator(selector=BasePageLocators.CARD_OF_ITEM).nth(num_of_card)
+
+        name = self.get_text_by_locator(selector=BasePageLocators.ITEM_NAME, root=card)
+        price = self.get_text_by_locator(selector=BasePageLocators.ITEM_PRICE, root=card)
+        card_id = self.get_text_by_attribute_for_locator(selector=BasePageLocators.ID_CARD_LOCATOR, root=card, attribute=BasePageLocators.ID_CARD_ATTRIBUTE)
+
+
+        self.hover(selector=BasePageLocators.ADD_TO_CART_BTN, root=card)
+        self.click(selector=BasePageLocators.ADD_TO_CART_BTN, root=card)
+
+        self.accept_continue_shopping_btn()
+        if card_id in self.cart_items:
+            self.cart_items[card_id]["count"] += 1
+        else:
+            self.cart_items[card_id] = {"name": name, "price": price, "count": 1}
+
+    def assert_equal(self, actual, expected):
+        assert actual == expected, f"actual = {actual}, expected = {expected}, actual_type = {type(actual)}, expected = {type(expected)}"
 
     def check_product_card(self, index=0):
         card = self.page.locator(selector=BasePageLocators.CARD_OF_ITEM).nth(index)
@@ -111,13 +166,24 @@ class BasePage:
         self.first_elem_should_be_visible(selector=BasePageLocators.ITEM_PRICE, root=card)
         self.first_elem_should_be_visible(selector=BasePageLocators.ITEM_NAME, root=card)
         self.first_elem_should_be_visible(selector=BasePageLocators.ADD_TO_CART_BTN, root=card)
+        self.first_elem_should_be_visible(selector=BasePageLocators.VIEW_PRODUCT_DETAILS_BTN, root=card)
 
-    def check_product_card_view_product_btn(self):
-        self.first_elem_should_be_visible(selector=BasePageLocators.VIEW_PRODUCT_DETAILS_BTN)
+    def should_be_footer(self):
+        self.elem_should_be_visible(BasePageLocators.FOOTER)
+        self.elem_should_be_visible(BasePageLocators.FOOTER_TITLE)
+        self.elem_should_be_visible(BasePageLocators.FOOTER_EMAIL)
+        self.elem_should_be_visible(BasePageLocators.FOOTER_SUBSCRIBE_BTN)
+
+    def check_subscribe_in_footer(self):
+        self.enter_data(selector=BasePageLocators.FOOTER_EMAIL, text=fake.email())
+        self.click(selector=BasePageLocators.FOOTER_SUBSCRIBE_BTN)
+
+    def should_be_footer_subscribe_success(self):
+        self.should_be_visible_with_text(selector=BasePageLocators.FOOTER_SUCCESS_SUBSCRIBE_MESSAGE, text=SuccessMessageText.FOOTER_SUBSCRIBE)
 
 
-    def open_product_card_detail(self):
-        self.click(selector=BasePageLocators.VIEW_PRODUCT_DETAILS_BTN)
+    def open_product_card_detail(self, num_of_card=1):
+        self.click(selector=BasePageLocators.VIEW_PRODUCT_DETAILS_BTN, num_of_card=num_of_card-1)
 
 
     def go_to_home(self):

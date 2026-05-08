@@ -3,6 +3,7 @@ import pytest
 from ui.pages.api_page import ApiListPage
 from ui.pages.base_page import BasePage
 from ui.pages.cart_page import CartPage
+from ui.pages.checkout_page import CheckoutPage
 from ui.pages.contact_us_page import ContactUsPage
 from ui.pages.detail_product_page import DetailProductsPage
 from ui.pages.locators import CartPageLocators
@@ -39,11 +40,6 @@ def login_page(get_page_with_context):
 
 
 @pytest.fixture
-def base_page(get_page_with_context):
-    page = BasePage(get_page_with_context)
-    return page
-
-@pytest.fixture
 def contact_us_page(get_page_with_context):
     page = ContactUsPage(get_page_with_context)
     return page
@@ -64,7 +60,7 @@ def detail_products_page(get_page_with_context):
     return page
 
 @pytest.fixture
-def empty_cart_page(get_page_with_context):
+def cart_page(get_page_with_context):
     page = CartPage(get_page_with_context)
     return page
 
@@ -76,4 +72,9 @@ def filled_cart_page(get_page_with_context):
 @pytest.fixture
 def api_list_page(get_page_with_context):
     page = ApiListPage(get_page_with_context)
+    return page
+
+@pytest.fixture
+def checkout_page(get_page_with_context):
+    page = CheckoutPage(get_page_with_context)
     return page

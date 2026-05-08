@@ -3,6 +3,7 @@ from dotenv import load_dotenv
 from ui.pages.base_page import BasePage
 from ui.pages.locators import DetailProductPageLocators
 from ui.test_data.data import ProductDetailData
+from ui.tools.faker import fake
 
 load_dotenv()
 
@@ -32,7 +33,15 @@ class DetailProductsPage(BasePage):
         self.elem_should_be_visible(selector=DetailProductPageLocators.REVIEW_SUBMIT_BTN)
 
 
-    def should_be_product_detail_page(self, index=0):
-        self.check_url(endpoint=f"{self.ENDPOINT}/{index + 1}")
+    def should_be_product_detail_page(self):
+        self.check_url(endpoint=f"{self.ENDPOINT}/")
         self.check_detail_product_info()
         self.check_review_form()
+
+    def enter_quantity_for_product(self, quantity):
+        self.enter_data(selector=DetailProductPageLocators.QUANTITY, text=str(quantity))
+
+    def add_detail_product_to_cart(self):
+        self.click(selector=DetailProductPageLocators.PRODUCT_ADD_TO_CART_BTN)
+        self.accept_continue_shopping_btn()
+        return self.get_text_by_attribute_for_locator(selector=DetailProductPageLocators.ITEM_ID_LOCATOR, attribute=DetailProductPageLocators.ITEM_ID_ATTRIBUTE)

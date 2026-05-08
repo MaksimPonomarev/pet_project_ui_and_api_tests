@@ -23,7 +23,7 @@ class ContactUsPage(BasePage):
         self.check_url()
 
     def should_be_success_message_send_feedback(self):
-        self.should_be_visible_with_text(text=SuccessMessageText.SUCCESS_MESSAGE_ADD_PRODUCT_TEXT, selector=ContactUsPageLocators.SUCCESS_MESSAGE_LOCATOR)
+        self.should_be_visible_with_text(text=SuccessMessageText.ADD_PRODUCT, selector=ContactUsPageLocators.SUCCESS_MESSAGE_LOCATOR)
         self.elem_should_be_visible(selector=ContactUsPageLocators.SUCCESS_MESSAGE_LOCATOR)
 
 

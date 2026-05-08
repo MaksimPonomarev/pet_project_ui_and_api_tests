@@ -18,12 +18,25 @@ class BasePageLocators:
     LEFT_SIDEBAR = ".left-sidebar"
     CONTINUE_SHOPPING_BTN = ".close-modal"
 
-    CARD_OF_ITEM = ".single-products"
+    CARD_OF_ITEM = ".features_items .col-sm-4"
     IMAGE_OF_CARD = "img[src]"
-    ADD_TO_CART_BTN = ".add-to-cart"
+
+    ADD_TO_CART_BTN = ".productinfo .add-to-cart"
     ITEM_PRICE = ".productinfo h2"
     ITEM_NAME = ".productinfo p"
     VIEW_PRODUCT_DETAILS_BTN = ".nav-pills.nav-justified a"
+    TITLE = ".title.text-center"
+
+    FOOTER = "#footer .single-widget"
+    FOOTER_TITLE = "#footer .single-widget h2"
+    FOOTER_EMAIL = "#susbscribe_email"
+    FOOTER_SUBSCRIBE_BTN = "#subscribe"
+    FOOTER_SUCCESS_SUBSCRIBE_MESSAGE = "#success-subscribe"
+
+    ID_CARD_LOCATOR = ".productinfo a"
+    ID_CARD_ATTRIBUTE = "data-product-id"
+
+    BREADCRUMB = ".breadcrumb"
 
 
 class MainPageLocators(BasePageLocators):
@@ -86,6 +99,7 @@ class TestCasesLocators(BasePageLocators):
 class ProductsPageLocators(BasePageLocators):
     ADVERTISEMENT = "#advertisement"
     SEARCH_PRODUCT = "#search_product"
+    SUBMIT_SEARCH_BTN = "#submit_search[type='button']"
 
 class DetailProductPageLocators(BasePageLocators):
     PRODUCT_DETAILS = ".product-details"
@@ -103,13 +117,60 @@ class DetailProductPageLocators(BasePageLocators):
     REVIEW_TEXTAREA_REVIEW= "textarea#review"
     REVIEW_SUBMIT_BTN = "#button-review"
 
-class CartPageLocators(BasePageLocators):
-    BREADCRUMB = ".breadcrumb"
-    EMPTY_CART = "#empty_cart"
-
-    CHECKOUT_BTN = ".btn-default.check_out"
-    TABLE_ITEMS = ".table-responsive"
-
+    ITEM_ID_LOCATOR = "#product_id"
+    ITEM_ID_ATTRIBUTE = "value"
 
 class ApiPageLocators(BasePageLocators):
     PANEL_HEADING = ".panel-heading"
+
+
+
+class CartItemLocators:
+    CART_INFO = "#cart_info"
+
+
+    @staticmethod
+    def id_card(product_id):
+        return f"#product-{product_id}"
+
+    @staticmethod
+    def product_price(product_id):
+        return f"#product-{product_id} .cart_price p"
+
+    @staticmethod
+    def product_total_price(product_id):
+        return f"#product-{product_id} .cart_total_price"
+
+    @staticmethod
+    def product_quantity(product_id):
+        return f"#product-{product_id} .cart_quantity"
+
+    @staticmethod
+    def product_name(product_id):
+        return f"#product-{product_id} .cart_description h4"
+
+    @staticmethod
+    def product_category(product_id):
+        return f"#product-{product_id} .cart_description p"
+
+class CartPageLocators(BasePageLocators, CartItemLocators):
+    EMPTY_CART = "#empty_cart"
+
+    CHECKOUT_BTN = ".btn-default.check_out"
+    LOGIN_LINK_IN_CHECKOUT = "#checkoutModal [href='/login']"
+
+    @staticmethod
+    def delete_product_btn(product_id):
+        return f"#product-{product_id} .cart_quantity_delete"
+
+
+class CheckoutPageLocators(BasePageLocators, CartItemLocators):
+    ADDRESS_DELIVERY = "#address_delivery"
+    ADDRESS_INVOICE = "#address_invoice"
+
+    NAME = ".address_firstname.address_lastname"
+    ADDRESS = ...
+
+    ORDER_ADD_INFO = "#ordermsg"
+    PLACE_ORDER_BTN = "[href='/payment']"
+    TOTAL_AMOUNT_CART = "[colspan] + td .cart_total_price"

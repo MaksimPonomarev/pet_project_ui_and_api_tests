@@ -47,10 +47,10 @@ class Fake:
         return self.faker.company()
 
     def address(self):
-        return self.faker.address()
+        return self.faker.street_address()
 
     def address2(self):
-        return self.faker.address()
+        return self.faker.street_address()
 
     def country(self):
         return random.choice(self.COUNTRIES)
@@ -72,6 +72,10 @@ class Fake:
 
     def paragraph(self):
         return self.faker.paragraph(nb_sentences=20)
+
+    def quantity(self):
+        return random.randint(1,100)
+
 
 fake = Fake(faker=Faker())
 
