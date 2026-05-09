@@ -1,7 +1,7 @@
 import os
 from dotenv import load_dotenv
 from ui.pages.base_page import BasePage
-from ui.pages.locators import DetailProductPageLocators
+from ui.pages.locators import DetailProductPageLocators, BasePageLocators
 from ui.test_data.data import ProductDetailData
 from ui.tools.faker import fake
 
@@ -41,7 +41,12 @@ class DetailProductsPage(BasePage):
     def enter_quantity_for_product(self, quantity):
         self.enter_data(selector=DetailProductPageLocators.QUANTITY, text=str(quantity))
 
+
+    def click_continue(self):
+        self.click(selector=BasePageLocators.CONTINUE_SHOPPING_BTN)
+
+
     def add_detail_product_to_cart(self):
         self.click(selector=DetailProductPageLocators.PRODUCT_ADD_TO_CART_BTN)
-        self.accept_continue_shopping_btn()
+        self.click_continue()
         return self.get_text_by_attribute_for_locator(selector=DetailProductPageLocators.ITEM_ID_LOCATOR, attribute=DetailProductPageLocators.ITEM_ID_ATTRIBUTE)

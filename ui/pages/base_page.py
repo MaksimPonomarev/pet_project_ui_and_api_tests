@@ -44,6 +44,9 @@ class BasePage:
         self.elem_should_be_visible(selector=BasePageLocators.DELETE_ACCOUNT_LINK)
         expect(self.page.get_by_text("Logged in")).to_be_visible()
 
+    def delete_account(self):
+        self.click(selector=BasePageLocators.DELETE_ACCOUNT_LINK)
+
     def accept_alert(self):
         self.page.on("dialog", lambda dialog: dialog.accept())
 
@@ -71,7 +74,8 @@ class BasePage:
         elem = self.page.locator(selector=selector)
         expect(elem).to_be_visible()
         return elem
-    
+
+
     def first_elem_should_be_visible(self, selector, root=None):
         locator = root or self.page
         elem = locator.locator(selector).first
@@ -134,9 +138,6 @@ class BasePage:
         locator = root or self.page
         locator.locator(selector).hover()
 
-    def accept_continue_shopping_btn(self):
-        self.click(selector=BasePageLocators.CONTINUE_SHOPPING_BTN)
-
 
     def add_product_to_cart(self, num_of_card=1):
         num_of_card -= 1
@@ -150,7 +151,7 @@ class BasePage:
         self.hover(selector=BasePageLocators.ADD_TO_CART_BTN, root=card)
         self.click(selector=BasePageLocators.ADD_TO_CART_BTN, root=card)
 
-        self.accept_continue_shopping_btn()
+        self.click(selector=BasePageLocators.CONTINUE_SHOPPING_BTN)
         if card_id in self.cart_items:
             self.cart_items[card_id]["count"] += 1
         else:
@@ -178,9 +179,11 @@ class BasePage:
         self.enter_data(selector=BasePageLocators.FOOTER_EMAIL, text=fake.email())
         self.click(selector=BasePageLocators.FOOTER_SUBSCRIBE_BTN)
 
-    def should_be_footer_subscribe_success(self):
-        self.should_be_visible_with_text(selector=BasePageLocators.FOOTER_SUCCESS_SUBSCRIBE_MESSAGE, text=SuccessMessageText.FOOTER_SUBSCRIBE)
+    def should_be_success_message(self, selector, text):
+        self.should_be_visible_with_text(selector=selector, text=text)
 
+    def should_be_footer_subscribe_success(self):
+        self.should_be_success_message(BasePageLocators.FOOTER_SUCCESS_SUBSCRIBE_MESSAGE, text=SuccessMessageText.FOOTER_SUBSCRIBE)
 
     def open_product_card_detail(self, num_of_card=1):
         self.click(selector=BasePageLocators.VIEW_PRODUCT_DETAILS_BTN, num_of_card=num_of_card-1)

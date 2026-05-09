@@ -29,22 +29,42 @@ def test_check_product_quantity_in_cart(products_page, detail_products_page, car
     cart_page.check_quantity(item_id=item_id, expect_quantity=4)
 
 
-def test_register_while_checkout(main_page, cart_page, login_page, signup_page, checkout_page):
+def test_register_while_checkout(main_page, cart_page, login_page, signup_page, checkout_page, payment_page, payment_done_page, deleted_account_page):
     main_page.open()
     main_page.should_be_main_page()
     main_page.add_product_to_cart()
     main_page.go_to_cart()
+
     cart_page.should_be_filled_cart()
     cart_page.go_to_login_page_from_checkout_form()
+
     login_page.should_be_login_page()
+
     signup_data = login_page.go_to_signup()
     signup_page.should_be_signup_page()
+
     user_account_info = signup_page.create_user(signup_data)
     signup_page.checking_successful_account_creation()
     signup_page.click_continue()
+
     main_page.should_be_main_page()
     main_page.should_be_logged_in()
     main_page.go_to_cart()
+
     cart_page.checkout_logged_in_user()
+
     checkout_page.should_be_checkout_page()
     checkout_page.check_orders_details(user_account_info["user_info"])
+    checkout_page.fill_comment()
+    checkout_page.click_place_order()
+
+    payment_page.should_be_payment_page()
+    payment_page.fill_payment_form()
+
+    payment_done_page.should_be_payment_done_page()
+    payment_done_page.delete_account()
+
+    deleted_account_page.should_be_deleted_account_page()
+    deleted_account_page.click_continue()
+
+    main_page.should_be_main_page()

@@ -33,3 +33,10 @@ class CheckoutPage(BasePage):
         for value in user_data.values():
             assert value in delivery_text, f"value = {value}"
             assert value in invoice_text, f"value = {value}"
+
+
+    def fill_comment(self):
+        self.enter_data(selector=CheckoutPageLocators.ORDER_ADD_INFO_PLACE, text=fake.paragraph())
+
+    def click_place_order(self):
+        self.click(CheckoutPageLocators.PLACE_ORDER_BTN)

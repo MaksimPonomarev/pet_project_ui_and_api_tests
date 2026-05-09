@@ -3,7 +3,7 @@ import time
 
 from dotenv import load_dotenv
 from ui.pages.base_page import BasePage
-from ui.pages.locators import SignupPageLocators
+from ui.pages.locators import SignupPageLocators, BasePageLocators
 from ui.tools.faker import fake
 
 load_dotenv()
@@ -75,7 +75,7 @@ class SignupPage(BasePage):
         self.elem_should_be_visible(selector=SignupPageLocators.ACCOUNT_CREATED_MESSAGE)
 
     def click_continue(self):
-        self.click(selector=SignupPageLocators.CONTINUE_BTN)
+        self.click(selector=BasePageLocators.CONTINUE_BTN)
 
 
 

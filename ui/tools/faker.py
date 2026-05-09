@@ -70,12 +70,23 @@ class Fake:
     def subject(self):
         return self.faker.sentence(nb_words=7)
 
-    def paragraph(self):
-        return self.faker.paragraph(nb_sentences=20)
+    def paragraph(self, sentences=20):
+        return self.faker.paragraph(nb_sentences=sentences)
 
     def quantity(self):
         return random.randint(1,100)
 
+    def credit_card_number(self):
+        return self.faker.credit_card_number()
+
+    def credit_card_security_code(self):
+        return self.faker.credit_card_security_code()
+
+    def credit_card_expire_month(self):
+        return self.faker.credit_card_expire(date_format="%m")
+
+    def credit_card_expire_year(self):
+        return self.faker.credit_card_expire(date_format="%Y")
 
 fake = Fake(faker=Faker())
 

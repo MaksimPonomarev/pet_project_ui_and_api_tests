@@ -6,6 +6,7 @@ class ErrorMessageText:
 class Titles:
     SEARCHED_PRODUCTS = "Searched Products"
     FOOTER = "Subscription"
+    DELETED_ACCOUNT = "Account Deleted!"
 
 class ProductDetailData:
     CATEGORY = "Category:"
@@ -17,6 +18,8 @@ class ProductDetailData:
 class SuccessMessageText:
     ADD_PRODUCT = "Success! Your details have been submitted successfully."
     FOOTER_SUBSCRIBE = "You have been successfully subscribed!"
+    PLACE_ORDER = "Congratulations! Your order has been confirmed!"
+    DELETED_ACCOUNT = "Your account has been permanently deleted!"
 
 class SearchData:
     VALID_PRODUCTS = ["Sleeveless Dress", "Men Tshirt", "Sleeves Top and Short - Blue & Pink"]

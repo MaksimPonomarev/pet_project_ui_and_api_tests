@@ -38,6 +38,8 @@ class BasePageLocators:
 
     BREADCRUMB = ".breadcrumb"
 
+    CONTINUE_BTN = "[data-qa='continue-button']"
+
 
 class MainPageLocators(BasePageLocators):
     CAROUSEL_SLIDER = "#slider-carousel.carousel.slide"
@@ -80,7 +82,7 @@ class SignupPageLocators(BasePageLocators):
 
     CREATE_ACCOUNT_BTN = "[data-qa=create-account]"
     ACCOUNT_CREATED_MESSAGE = "[data-qa=account-created]"
-    CONTINUE_BTN = "[data-qa=continue-button]"
+
 
 class ContactUsPageLocators(BasePageLocators):
     NAME = "[data-qa=name]"
@@ -172,5 +174,27 @@ class CheckoutPageLocators(BasePageLocators, CartItemLocators):
     ADDRESS = ...
 
     ORDER_ADD_INFO = "#ordermsg"
+    ORDER_ADD_INFO_PLACE= "#ordermsg [name='message']"
     PLACE_ORDER_BTN = "[href='/payment']"
     TOTAL_AMOUNT_CART = "[colspan] + td .cart_total_price"
+
+
+class PaymentPageLocators(BasePageLocators):
+    PAYMENT_INFO_BLOCK = ".payment-information"
+
+    NAME_OF_CARD = "[data-qa='name-on-card']"
+    CARD_NUMBER = "[data-qa='card-number']"
+    CVC = "[data-qa='cvc']"
+    EXPIRY_MONTH = "[data-qa='expiry-month']"
+    EXPIRY_YEAR = "[data-qa='expiry-year']"
+
+    PAY_AND_CONFIRM_ORDER_BTN = "[data-qa='pay-button']"
+
+class PaymentDonePageLocators(BasePageLocators):
+    ORDER_PLACED = ".col-sm-9.col-sm-offset-1"
+    DOWNLOAD_INVOICE_BTN = ".btn-default.check_out"
+
+
+
+class DeleteAccountPageLocators(BasePageLocators):
+    ACCOUNT_DELETED_BLOCK = ".col-sm-9.col-sm-offset-1"
