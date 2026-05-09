@@ -5,7 +5,7 @@ from dotenv import load_dotenv
 from playwright.sync_api import expect
 from ui.pages.base_page import BasePage
 from ui.pages.locators import LoginPageLocators, SignupPageLocators, BasePageLocators, ContactUsPageLocators, \
-    CartPageLocators
+    CartPageLocators, ProductsPageLocators, CartItemLocators
 from ui.pages.main_page import MainPage
 from ui.tools.faker import fake
 from config import settings
@@ -40,7 +40,7 @@ class CartPage(BasePage):
         actual_quantity = self.get_text_by_locator(selector=CartPageLocators.product_quantity(item_id))
         self.assert_equal(int(actual_quantity), expect_quantity)
 
-    def check_added_products(self, cart_items):
+    def should_be_added_products(self, cart_items):
         assert cart_items, "cart_items пустой"
         for id_product, product_info in cart_items.items():
             self.elem_should_be_visible(selector=CartPageLocators.id_card(id_product))
@@ -56,6 +56,8 @@ class CartPage(BasePage):
             self.assert_equal(product_info["count"], int(product_quantity))
             self.assert_equal(self.get_total_price(product_price, product_quantity), self.format_price(product_total))
 
+    def should_be_deleted_product(self, product_id):
+        self.should_not_be_visible(selector=CartItemLocators.id_card(product_id))
 
     def go_to_login_page_from_checkout_form(self):
         self.click(CartPageLocators.CHECKOUT_BTN)
@@ -64,4 +66,7 @@ class CartPage(BasePage):
     def checkout_logged_in_user(self):
         self.click(CartPageLocators.CHECKOUT_BTN)
 
+
+    def delete_product_by_id(self, product_id):
+        self.click(selector=CartPageLocators.delete_product_btn(product_id))
 

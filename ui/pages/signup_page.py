@@ -55,7 +55,7 @@ class SignupPage(BasePage):
         mobile_number = self.enter_data(selector=SignupPageLocators.MOBILE_NUMBER, text=fake.mobile_number())
         self.click(selector=SignupPageLocators.CREATE_ACCOUNT_BTN)
         return {
-            "credentials":{"name": name,"password": password},
+            "credentials":{"name": name,"password": password, "email": signup_data["email"]},
             "user_info":{
                 "first_name": first_name,
                 "last_name": last_name,

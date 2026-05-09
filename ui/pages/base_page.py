@@ -156,10 +156,15 @@ class BasePage:
         if card_id in self.cart_items:
             self.cart_items[card_id]["count"] += 1
         else:
-            self.cart_items[card_id] = {"name": name, "price": price, "count": 1}
+            self.cart_items[card_id] = {"name": name, "price": price, "count": 1, "card_id": card_id}
+
+        return card_id
 
     def assert_equal(self, actual, expected):
         assert actual == expected, f"actual = {actual}, expected = {expected}, actual_type = {type(actual)}, expected = {type(expected)}"
+
+    def should_not_be_visible(self, selector):
+        expect(self.page.locator(selector)).to_have_count(0)
 
     def check_product_card(self, index=0):
         card = self.page.locator(selector=BasePageLocators.CARD_OF_ITEM).nth(index)
