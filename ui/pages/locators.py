@@ -1,6 +1,6 @@
 class BasePageLocators:
     IMG_LOGO_SITE = "img[src='/static/images/home/logo.png']"
-    PANEL_OF_TABS = ".shop-menu"
+    PANEL_OF_TABS = "#header"
 
     HOME_LINK = "li a[href='/']"
     PRODUCTS_LINK = "li a[href='/products']"

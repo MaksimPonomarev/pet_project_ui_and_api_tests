@@ -1,3 +1,6 @@
+class HeaderSite:
+    LOGGEN_IN_TEXT = "Logged in"
+
 class ErrorMessageText:
     INCORRECT_LOGIN_ERROR = "Your email or password is incorrect!"
     INCORRECT_SIGNUP_ERROR = "Email Address already exist!"

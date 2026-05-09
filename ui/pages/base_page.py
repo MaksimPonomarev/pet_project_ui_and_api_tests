@@ -1,12 +1,13 @@
 import os
 import re
+import time
 
 from dotenv import load_dotenv
 from playwright.sync_api import expect
 
 from config import settings
 from ui.pages.locators import BasePageLocators, LoginPageLocators, ContactUsPageLocators
-from ui.test_data.data import SuccessMessageText
+from ui.test_data.data import SuccessMessageText, HeaderSite
 from ui.tools.faker import fake
 
 load_dotenv()
@@ -42,7 +43,7 @@ class BasePage:
     def should_be_logged_in(self):
         self.elem_should_be_visible(selector=BasePageLocators.LOGOUT_LINK)
         self.elem_should_be_visible(selector=BasePageLocators.DELETE_ACCOUNT_LINK)
-        expect(self.page.get_by_text("Logged in")).to_be_visible()
+        self.should_be_visible_with_text(selector=BasePageLocators.PANEL_OF_TABS, text=HeaderSite.LOGGEN_IN_TEXT)
 
     def delete_account(self):
         self.click(selector=BasePageLocators.DELETE_ACCOUNT_LINK)
@@ -67,8 +68,8 @@ class BasePage:
     def click(self, selector, root=None, num_of_card=1):
         locator = root or self.page
         el = locator.locator(selector).nth(num_of_card-1)
-        expect(el).to_be_enabled()
         el.click()
+
 
     def elem_should_be_visible(self, selector):
         elem = self.page.locator(selector=selector)

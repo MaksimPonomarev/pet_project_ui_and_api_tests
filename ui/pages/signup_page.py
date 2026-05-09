@@ -70,12 +70,7 @@ class SignupPage(BasePage):
                 }
         }
 
-    def checking_successful_account_creation(self):
-        self.check_url(endpoint="/account_created")
-        self.elem_should_be_visible(selector=SignupPageLocators.ACCOUNT_CREATED_MESSAGE)
 
-    def click_continue(self):
-        self.click(selector=BasePageLocators.CONTINUE_BTN)
 
 
 

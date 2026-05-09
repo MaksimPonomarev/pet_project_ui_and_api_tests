@@ -1,5 +1,6 @@
 import pytest
 
+from ui.pages.account_created_page import CreatedAccountPage
 from ui.pages.api_page import ApiListPage
 from ui.pages.base_page import BasePage
 from ui.pages.cart_page import CartPage
@@ -96,4 +97,9 @@ def payment_done_page(get_page_with_context):
 @pytest.fixture
 def deleted_account_page(get_page_with_context):
     page = DeleteAccountPage(get_page_with_context)
+    return page
+
+@pytest.fixture
+def created_account_page(get_page_with_context):
+    page = CreatedAccountPage(get_page_with_context)
     return page
