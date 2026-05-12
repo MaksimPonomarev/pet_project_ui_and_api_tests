@@ -38,4 +38,5 @@ def test_remove_product_from_cart(products_page, cart_page):
     cart_page.should_be_filled_cart()
     cart_page.should_be_added_products(cart_items=products_page.cart_items)
     cart_page.delete_product_by_id(product_id=first_product_id)
-    cart_page.should_be_deleted_product(product_id=first_product_id)
+    cart_page.should_be_empty_cart()
+    cart_page.should_not_be_visible_elem_by_id(product_id=first_product_id)

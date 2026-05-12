@@ -10,7 +10,7 @@ def test_register_while_checkout(products_page, main_page, cart_page, login_page
     main_page.go_to_cart()
 
     cart_page.should_be_filled_cart()
-    cart_page.should_be_added_products(cart_items=products_page.cart_items)
+    cart_page.should_be_added_products(cart_items=main_page.cart_items)
     cart_page.go_to_login_page_from_checkout_form()
 
     login_page.should_be_login_page()
@@ -59,7 +59,6 @@ def test_register_before_checkout(products_page, main_page, created_account_page
     signup_page.should_be_signup_page()
 
     user_account_info = signup_page.create_user(signup_data)
-
     created_account_page.should_be_success_created_account()
     created_account_page.click_continue()
 
@@ -69,7 +68,8 @@ def test_register_before_checkout(products_page, main_page, created_account_page
     main_page.go_to_cart()
 
     cart_page.should_be_filled_cart()
-    cart_page.should_be_added_products(cart_items=products_page.cart_items)
+    cart_page.should_be_added_products(cart_items=main_page.cart_items)
+
     cart_page.checkout_logged_in_user()
 
     checkout_page.should_be_checkout_page()

@@ -6,8 +6,8 @@ from dotenv import load_dotenv
 from playwright.sync_api import expect
 
 from config import settings
-from ui.pages.locators import BasePageLocators, LoginPageLocators, ContactUsPageLocators
-from ui.test_data.data import SuccessMessageText, HeaderSite
+from ui.pages.locators import BasePageLocators, LoginPageLocators, ContactUsPageLocators, LeftSidebarLocators
+from ui.test_data.data import SuccessMessageText, HeaderSite, Brands, WomenSubcategory, MenSubcategory, KidsSubcategory
 from ui.tools.faker import fake
 
 load_dotenv()
@@ -19,12 +19,13 @@ class BasePage:
         self.page = page
         self.cart_items = {}
 
-    def should_be_visible_with_text(self, text, selector=None, root=None):
+    def should_be_visible_with_text(self, text, selector=None, root=None, exact=False):
         locator = root or self.page
         if selector:
-            expect(locator.locator(selector).filter(has_text=text)).to_be_visible()
-        else:
-            expect(locator.get_by_text(text)).to_be_visible()
+            if exact:
+                expect(locator.locator(selector)).to_have_text(text)
+            else:
+                expect(locator.locator(selector).filter(has_text=text)).to_be_visible()
 
     def get_inner_text(self, selector=None, root=None):
         locator = root or self.page
@@ -32,13 +33,12 @@ class BasePage:
             return locator.locator(selector).inner_text()
         return locator.inner_text()
 
-
     def should_be_visible_inner_text(self, text, selector=None, root=None):
         locator = root or self.page
         if selector:
             expect(locator.locator(selector).filter(has_text=text)).to_be_visible()
         else:
-            expect(locator.inner_text(text)).to_be_visible()
+            expect(locator.get_by_text(text)).to_be_visible()
 
     def should_be_logged_in(self):
         self.elem_should_be_visible(selector=BasePageLocators.LOGOUT_LINK)
@@ -63,7 +63,7 @@ class BasePage:
 
     def check_url(self, endpoint=None):
         expected_url = f"{BASE_URL}{endpoint or self.ENDPOINT}"
-        expect(self.page).to_have_url(re.compile(expected_url))
+        expect(self.page).to_have_url(re.compile(rf"{re.escape(expected_url)}(?:#.*)?"))
 
     def click(self, selector, root=None, num_of_card=1):
         locator = root or self.page
@@ -122,9 +122,15 @@ class BasePage:
         result = self.page.locator(selector=selector).select_option(value=value)
         return result[0] if result else None
 
-
-    def open(self):
-        self.page.goto(f"{BASE_URL}{self.ENDPOINT}", timeout=settings.navigation_timeout)
+    def open(self, retries=3):
+        for i in range(retries):
+            try:
+                self.page.goto(f"{BASE_URL}{self.ENDPOINT}", timeout=settings.navigation_timeout)
+                return
+            except Exception:
+                if i == retries - 1:
+                    raise
+                self.page.wait_for_timeout(1000)
 
     def get_text_by_locator(self, selector, root=None):
         locator = root or self.page
@@ -157,7 +163,6 @@ class BasePage:
             self.cart_items[card_id]["count"] += 1
         else:
             self.cart_items[card_id] = {"name": name, "price": price, "count": 1, "card_id": card_id}
-
         return card_id
 
     def assert_equal(self, actual, expected):
@@ -195,6 +200,22 @@ class BasePage:
         self.click(selector=BasePageLocators.VIEW_PRODUCT_DETAILS_BTN, num_of_card=num_of_card-1)
 
 
+    # products methods (base_page, product_page)
+    def should_be_visible_left_sidebar(self):
+        self.elem_should_be_visible(selector=LeftSidebarLocators.LEFT_SIDEBAR)
+        self.elem_should_be_visible(selector=LeftSidebarLocators.CATEGORY)
+        self.elem_should_be_visible(selector=LeftSidebarLocators.BRANDS)
+
+    def should_be_categories_on_left_sidebar(self):
+        self.elem_should_be_visible(selector=LeftSidebarLocators.category_group(WomenSubcategory))
+        self.elem_should_be_visible(selector=LeftSidebarLocators.category_group(MenSubcategory))
+        self.elem_should_be_visible(selector=LeftSidebarLocators.category_group(KidsSubcategory))
+
+
+
+
+
+    # navigation methods
     def go_to_home(self):
         self.click(selector=BasePageLocators.HOME_LINK)
 

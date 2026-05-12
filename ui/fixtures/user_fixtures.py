@@ -9,7 +9,6 @@ def create_account(login_page, signup_page, created_account_page):
     get_signup_data = login_page.go_to_signup()
     get_create_account_data = signup_page.create_user(signup_data=get_signup_data)
     created_account_page.click_continue()
-    print(get_create_account_data)
     return get_create_account_data
 
 

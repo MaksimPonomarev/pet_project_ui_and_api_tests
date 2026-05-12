@@ -103,3 +103,4 @@ def deleted_account_page(get_page_with_context):
 def created_account_page(get_page_with_context):
     page = CreatedAccountPage(get_page_with_context)
     return page
+

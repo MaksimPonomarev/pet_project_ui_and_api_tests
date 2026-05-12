@@ -70,7 +70,6 @@ class SignupPage(BasePage):
                 }
         }
 
-
-
-
+    def click_continue(self):
+        self.click(selector=SignupPageLocators.CONTINUE_BTN)
 

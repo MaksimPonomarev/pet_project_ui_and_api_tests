@@ -56,7 +56,7 @@ class CartPage(BasePage):
             self.assert_equal(product_info["count"], int(product_quantity))
             self.assert_equal(self.get_total_price(product_price, product_quantity), self.format_price(product_total))
 
-    def should_be_deleted_product(self, product_id):
+    def should_not_be_visible_elem_by_id(self, product_id):
         self.should_not_be_visible(selector=CartItemLocators.id_card(product_id))
 
     def go_to_login_page_from_checkout_form(self):
@@ -69,4 +69,5 @@ class CartPage(BasePage):
 
     def delete_product_by_id(self, product_id):
         self.click(selector=CartPageLocators.delete_product_btn(product_id))
+
 

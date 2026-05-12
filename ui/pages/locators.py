@@ -15,7 +15,6 @@ class BasePageLocators:
     LOGOUT_LINK = "li a[href='/logout']"
     DELETE_ACCOUNT_LINK = "li a[href='/delete_account']"
 
-    LEFT_SIDEBAR = ".left-sidebar"
     CONTINUE_SHOPPING_BTN = ".close-modal"
 
     CARD_OF_ITEM = ".features_items .col-sm-4"
@@ -39,6 +38,25 @@ class BasePageLocators:
     BREADCRUMB = ".breadcrumb"
 
     CONTINUE_BTN = "[data-qa='continue-button']"
+
+class LeftSidebarLocators:
+    LEFT_SIDEBAR = ".left-sidebar"
+
+    CATEGORY = ".category-products#accordian"
+
+    @staticmethod
+    def category_group(category):
+        return f"[data-parent='#accordian'][href='#{category}']"
+
+    BRANDS = ".brands_products"
+
+    @staticmethod
+    def brand_item(brand):
+        return f"li a[href='/brand_products/{brand}']"
+
+    @staticmethod
+    def subcategory(subcategory):
+        return f"li a[href='/category_products/{subcategory}']"
 
 
 class MainPageLocators(BasePageLocators):
@@ -79,9 +97,10 @@ class SignupPageLocators(BasePageLocators):
     CITY = "[data-qa=city]"
     ZIPCODE = "[data-qa=zipcode]"
     MOBILE_NUMBER = "[data-qa=mobile_number]"
-
     CREATE_ACCOUNT_BTN = "[data-qa=create-account]"
-    ACCOUNT_CREATED_MESSAGE = "[data-qa=account-created]"
+
+class CreatedAccountPageLocators(BasePageLocators):
+    ACCOUNT_CREATED_TITLE = "[data-qa=account-created]"
 
 
 class ContactUsPageLocators(BasePageLocators):

@@ -1,7 +1,7 @@
 import os
 from dotenv import load_dotenv
 from ui.pages.base_page import BasePage
-from ui.pages.locators import ProductsPageLocators
+from ui.pages.locators import ProductsPageLocators, LeftSidebarLocators
 
 load_dotenv()
 
@@ -12,7 +12,7 @@ class ProductsPage(BasePage):
     def should_be_product_page(self):
         self.elem_should_be_visible(selector=ProductsPageLocators.ADVERTISEMENT)
         self.elem_should_be_visible(selector=ProductsPageLocators.SEARCH_PRODUCT)
-        self.elem_should_be_visible(selector=ProductsPageLocators.LEFT_SIDEBAR)
+        self.elem_should_be_visible(selector=LeftSidebarLocators.LEFT_SIDEBAR)
         self.first_elem_should_be_visible(selector=ProductsPageLocators.CARD_OF_ITEM)
         self.check_url()
 

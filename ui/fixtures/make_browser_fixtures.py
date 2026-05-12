@@ -1,3 +1,5 @@
+import re
+
 import pytest
 from playwright.sync_api import sync_playwright
 
@@ -11,6 +13,10 @@ def get_page_with_context(request):
         headless = request.config.getoption("--headless")
         browser = p.chromium.launch(headless=headless, slow_mo=settings.slow_mo)
         context = browser.new_context(storage_state="./ui/storage_state.json")
+        context.route(
+            re.compile(r"(googlesyndication|doubleclick|google-analytics|adservice)"),
+            lambda route: route.abort()
+        )
         page = context.new_page()
         page.set_default_timeout(settings.default_timeout)
         page.set_default_navigation_timeout(settings.navigation_timeout)

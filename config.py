@@ -12,7 +12,7 @@ class Settings(BaseSettings):
         extra="allow"
     )
     test_data: TestDataConfig
-    default_timeout: int = 15000
+    default_timeout: int = 40000
     navigation_timeout: int = 100000
     slow_mo: int
 

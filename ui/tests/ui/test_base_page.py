@@ -8,10 +8,10 @@ def test_check_site_header(main_page):
     main_page.should_be_head_of_site()
 
 
-def test_logout(base_page, create_account):
-    base_page.should_be_logged_in()
-    base_page.logout()
-    base_page.should_be_logged_out()
+def test_logout(main_page, create_account):
+    main_page.should_be_logged_in()
+    main_page.logout()
+    main_page.should_be_logged_out()
 
 
 def test_go_to_products_page(main_page, products_page):
