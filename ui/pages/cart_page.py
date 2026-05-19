@@ -1,46 +1,43 @@
-import time
-from ui.pages.base_page import BasePage, BASE_URL
-import os
-from dotenv import load_dotenv
-from playwright.sync_api import expect
+from asyncio import timeout
+
 from ui.pages.base_page import BasePage
-from ui.pages.locators import LoginPageLocators, SignupPageLocators, BasePageLocators, ContactUsPageLocators, \
-    CartPageLocators, ProductsPageLocators, CartItemLocators
-from ui.pages.main_page import MainPage
-from ui.tools.faker import fake
-from config import settings
-
-
-load_dotenv()
+from ui.pages.locators import CartPageLocators, CartItemLocators
+from playwright.sync_api import TimeoutError as PlaywrightTimeoutError
 
 
 class CartPage(BasePage):
-    ENDPOINT = os.getenv("CART_ENDPOINT")
+    ENDPOINT = "/view_cart"
 
     def should_be_empty_cart(self):
+        self.wait_page_is_functional()
+        self.check_url()
         self.elem_should_be_visible(selector=CartPageLocators.BREADCRUMB)
         self.elem_should_be_visible(selector=CartPageLocators.EMPTY_CART)
-        self.check_url()
+
 
     def should_be_filled_cart(self):
+        self.wait_page_is_functional()
+        self.check_url()
         self.elem_should_be_visible(selector=CartPageLocators.CART_INFO)
         self.elem_should_be_visible(selector=CartPageLocators.CHECKOUT_BTN)
-        self.check_url()
 
-    def get_total_price(self, product_price, product_quantity):
-        price = float(product_price.replace("Rs.", "").strip())
-        quantity = int(product_quantity)
-        return price * quantity
 
-    def format_price(self, price):
+    def _parse_price(self, price: str) -> float:
         return float(price.replace("Rs.", "").strip())
 
+    def get_total_price(self, product_price: str, product_quantity: str) -> float:
+        return self._parse_price(product_price) * int(product_quantity)
 
-    def check_quantity(self, item_id, expect_quantity):
+
+    def check_quantity(self, item_id: int, expect_quantity: int):
         actual_quantity = self.get_text_by_locator(selector=CartPageLocators.product_quantity(item_id))
         self.assert_equal(int(actual_quantity), expect_quantity)
 
-    def should_be_added_products(self, cart_items):
+    def should_be_added_products(self, cart_items: dict):
+        """
+        Check information about the added product
+        :param cart_items: dict
+        """
         assert cart_items, "cart_items пустой"
         for id_product, product_info in cart_items.items():
             self.elem_should_be_visible(selector=CartPageLocators.id_card(id_product))
@@ -52,22 +49,26 @@ class CartPage(BasePage):
 
 
             self.assert_equal(product_info["name"], product_name)
-            self.assert_equal(self.format_price(product_info["price"]), self.format_price(product_price))
+            self.assert_equal(self._parse_price(product_info["price"]), self._parse_price(product_price))
             self.assert_equal(product_info["count"], int(product_quantity))
-            self.assert_equal(self.get_total_price(product_price, product_quantity), self.format_price(product_total))
+            self.assert_equal(self.get_total_price(product_price, product_quantity), self._parse_price(product_total))
 
-    def should_not_be_visible_elem_by_id(self, product_id):
+    def should_not_be_visible_elem_by_id(self, product_id: int):
         self.should_not_be_visible(selector=CartItemLocators.id_card(product_id))
 
     def go_to_login_page_from_checkout_form(self):
         self.click(CartPageLocators.CHECKOUT_BTN)
         self.click(CartPageLocators.LOGIN_LINK_IN_CHECKOUT)
 
-    def checkout_logged_in_user(self):
+    def click_checkout_btn(self):
         self.click(CartPageLocators.CHECKOUT_BTN)
+        try:
+            self.not_to_have_url(timeout=2000)
+        except AssertionError:
+            self.click(CartPageLocators.CHECKOUT_BTN)
 
 
-    def delete_product_by_id(self, product_id):
+    def delete_product_by_id(self, product_id: int):
         self.click(selector=CartPageLocators.delete_product_btn(product_id))
 
 

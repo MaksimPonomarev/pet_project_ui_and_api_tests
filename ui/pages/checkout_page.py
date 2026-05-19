@@ -1,39 +1,30 @@
-
-import os
-import time
-
-from dotenv import load_dotenv
 from ui.pages.base_page import BasePage
-from ui.pages.locators import ContactUsPageLocators, CheckoutPageLocators
-from ui.test_data.data import SuccessMessageText
+from ui.pages.locators import CheckoutPageLocators
+from ui.pages.types import UserInfo
+from ui.test_data.factories import UserData
 from ui.tools.faker import fake
-from config import settings
-
-
-load_dotenv()
 
 
 class CheckoutPage(BasePage):
-    ENDPOINT = os.getenv("CHECKOUT")
+    ENDPOINT = "/checkout"
 
     def should_be_checkout_page(self):
+        self.wait_page_is_functional()
         self.check_url()
         self.elem_should_be_visible(selector=CheckoutPageLocators.ADDRESS_DELIVERY)
         self.elem_should_be_visible(selector=CheckoutPageLocators.ADDRESS_INVOICE)
         self.elem_should_be_visible(selector=CheckoutPageLocators.ORDER_ADD_INFO)
         self.elem_should_be_visible(selector=CheckoutPageLocators.PLACE_ORDER_BTN)
 
-
-    def check_orders_details(self, user_data):
+    def check_orders_details(self, user_data: UserData):
         address_delivery = self.page.locator(CheckoutPageLocators.ADDRESS_DELIVERY)
         address_invoice = self.page.locator(CheckoutPageLocators.ADDRESS_INVOICE)
 
         delivery_text = self.get_inner_text(root=address_delivery)
         invoice_text = self.get_inner_text(root=address_invoice)
-        for value in user_data.values():
+        for value in user_data.address_fields().values():
             assert value in delivery_text, f"value = {value}"
             assert value in invoice_text, f"value = {value}"
-
 
     def fill_comment(self):
         self.enter_data(selector=CheckoutPageLocators.ORDER_ADD_INFO_PLACE, text=fake.paragraph())

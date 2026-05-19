@@ -1,0 +1,22 @@
+from ui.components.left_sidebar_component import LeftSidebarComponent
+from ui.pages.base_page import BasePage
+from ui.pages.locators import BasePageLocators
+from ui.test_data.data import Brands
+
+class BrandProductPage(BasePage):
+    """
+    Class for interaction with /brand_products/{brand}
+    """
+    def __init__(self, page):
+        super().__init__(page)
+        self.sidebar = LeftSidebarComponent(self)
+
+    def should_be_brand_products_page(self, brand: Brands):
+        """
+        Check opened brand product page
+        :param brand: Enum
+        """
+        self.wait_page_is_functional()
+        self.check_url(endpoint=brand.url)
+        self.should_be_visible_with_text(selector=BasePageLocators.TITLE, text=brand.title_brand, exact=True)
+        self.check_product_card()

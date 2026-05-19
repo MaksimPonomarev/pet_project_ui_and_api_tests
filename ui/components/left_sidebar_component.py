@@ -1,0 +1,29 @@
+from ui.pages.locators import LeftSidebarLocators
+from ui.test_data.data import Brands, CategoryGroup, BaseSubcategory
+
+
+class LeftSidebarComponent:
+    def __init__(self, base_page):
+        self.base_page = base_page
+
+    def open_category_group(self, category: CategoryGroup):
+        self.base_page.click(selector=LeftSidebarLocators.category_group(category.value))
+
+    def should_be_category_group_opened(self, subcategory: type[BaseSubcategory]):
+        for elem in subcategory:
+            self.base_page.elem_should_be_visible(selector=LeftSidebarLocators.subcategory(subcategory=elem.id))
+
+    def open_subcategory_page(self, subcategory: BaseSubcategory):
+        self.base_page.click(selector=LeftSidebarLocators.subcategory(subcategory.id))
+
+    def open_brand_page(self, brand: Brands):
+        self.base_page.click(selector=LeftSidebarLocators.brand_item(brand.value))
+
+
+    def should_be_brands_on_left_sidebar(self):
+        """
+        Check all brands on left sidebar presence
+        """
+        self.base_page.elem_should_be_visible(selector=LeftSidebarLocators.BRANDS)
+        for elem in Brands:
+            self.base_page.elem_should_be_visible(selector=LeftSidebarLocators.brand_item(elem.value))

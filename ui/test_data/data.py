@@ -74,7 +74,7 @@ class Brands(Enum):
     MAST_HARBOUR = "Mast & Harbour"
     BABYHUG = "Babyhug"
     ALLEN_SOLLY_JUNIOR = "Allen Solly Junior"
-    KIIKIE_KIDS = "Kookie Kids"
+    KOOKIE_KIDS = "Kookie Kids"
     BIBA = "Biba"
 
     @property

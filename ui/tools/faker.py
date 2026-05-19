@@ -35,7 +35,7 @@ class Fake:
         }
 
     def title(self):
-        return random.randint(1,2)
+        return random.choice(["mr", "mrs"])
 
     def first_name(self):
         return self.faker.first_name()

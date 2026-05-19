@@ -1,20 +1,68 @@
-import time
-
+import httpx
 import pytest
+from ui.test_data.factories import UserFactory
 
-
-@pytest.fixture
-def create_account(login_page, signup_page, created_account_page):
-    login_page.open()
-    get_signup_data = login_page.go_to_signup()
-    get_create_account_data = signup_page.create_user(signup_data=get_signup_data)
-    created_account_page.click_continue()
-    return get_create_account_data
 
 
 @pytest.fixture
-def create_account_and_logout(create_account, main_page, login_page):
-    main_page.logout()
-    login_page.go_to_home()
-    return create_account
+def api_client():
+    with httpx.Client() as client:
+        yield client
 
+
+@pytest.fixture
+def user(api_client):
+    user_info = UserFactory.create()
+
+    response = api_client.post(
+        "https://automationexercise.com/api/createAccount",
+        data={
+            "name": user_info.name,
+            "email": user_info.email,
+            "password": user_info.password,
+            "title": user_info.title,
+            "birth_date": user_info.day,
+            "birth_month": user_info.month,
+            "birth_year": user_info.year,
+            "firstname": user_info.first_name,
+            "lastname": user_info.last_name,
+            "company": user_info.company,
+            "address1": user_info.address,
+            "address2": user_info.address2,
+            "country": user_info.country,
+            "zipcode": user_info.zipcode,
+            "state": user_info.state,
+            "city": user_info.city,
+            "mobile_number": user_info.mobile_number,
+        }
+    )
+
+    user_data = response.json()
+    if user_data.get("responseCode") != 201:
+        raise ValueError(f"Failed to create user: {user_data}")
+
+    return user_info
+
+
+@pytest.fixture
+def user_with_cleanup(user, api_client):
+        yield user
+
+        response_to_delete = api_client.request(
+            method="DELETE",
+            url="https://automationexercise.com/api/deleteAccount",
+            data={
+                "email": user.email,
+                "password": user.password
+            }
+        )
+
+        delete_data = response_to_delete.json()
+        if delete_data.get("responseCode") != 200:
+            raise ValueError(f"Failed to delete user: {delete_data}")
+
+
+
+@pytest.fixture
+def account_user_info():
+    return UserFactory.create()

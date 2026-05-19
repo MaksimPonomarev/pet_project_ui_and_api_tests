@@ -1,17 +1,13 @@
-import os
-from dotenv import load_dotenv
 from ui.pages.base_page import BasePage
-from ui.pages.locators import LoginPageLocators, PaymentPageLocators
-from ui.test_data.data import ErrorMessageText, SuccessMessageText
+from ui.pages.locators import PaymentPageLocators
 from ui.tools.faker import fake
-
-load_dotenv()
 
 
 class PaymentPage(BasePage):
-    ENDPOINT = os.getenv("PAYMENT")
+    ENDPOINT = "/payment"
 
     def should_be_payment_page(self):
+        self.wait_page_is_functional()
         self.check_url()
         self.should_be_payment_form()
 

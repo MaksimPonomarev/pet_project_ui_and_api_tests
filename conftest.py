@@ -1,12 +1,14 @@
 from playwright.sync_api import expect
-
 from config import settings
+from dotenv import load_dotenv
+
+
+load_dotenv()
 
 pytest_plugins = [
     "ui.fixtures.page_fixtures",
     "ui.fixtures.make_browser_fixtures",
-    "ui.fixtures.user_fixtures",
-    "ui.fixtures.filled_cart_fixtures"
+    "ui.fixtures.user_fixtures"
 ]
 
 

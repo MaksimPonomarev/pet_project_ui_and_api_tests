@@ -7,8 +7,10 @@ from config import settings
 
 
 @pytest.fixture
-def get_page_with_context(request):
-    #фикстура для создания браузера с контекстом
+def get_page_with_context(request: pytest.FixtureRequest):
+    """
+    Fixtures made browser with context (skip cookies banner)
+    """
     with sync_playwright() as p:
         headless = request.config.getoption("--headless")
         browser = p.chromium.launch(headless=headless, slow_mo=settings.slow_mo)
@@ -29,8 +31,10 @@ def get_page_with_context(request):
 
 
 @pytest.fixture
-def get_page_without_context(request):
-    #фикстура для создания браузера без контекста
+def get_page_without_context(request: pytest.FixtureRequest):
+    """
+    Fixtures made browser without context (with cookies banner)
+    """
     with sync_playwright() as p:
         headless = request.config.getoption("--headless")
         browser = p.chromium.launch(headless=headless, slow_mo=settings.slow_mo)

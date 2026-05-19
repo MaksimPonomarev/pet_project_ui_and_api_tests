@@ -1,6 +1,6 @@
 class BasePageLocators:
     IMG_LOGO_SITE = "img[src='/static/images/home/logo.png']"
-    PANEL_OF_TABS = "#header"
+    HEADER = "#header"
 
     HOME_LINK = "li a[href='/']"
     PRODUCTS_LINK = "li a[href='/products']"
@@ -15,9 +15,9 @@ class BasePageLocators:
     LOGOUT_LINK = "li a[href='/logout']"
     DELETE_ACCOUNT_LINK = "li a[href='/delete_account']"
 
-    CONTINUE_SHOPPING_BTN = ".close-modal"
+    CONTINUE_SHOPPING_BTN = ".modal.show .close-modal"
 
-    CARD_OF_ITEM = ".features_items .col-sm-4"
+    CARD_OF_ITEM = ".product-image-wrapper"
     IMAGE_OF_CARD = "img[src]"
 
     ADD_TO_CART_BTN = ".productinfo .add-to-cart"
@@ -38,6 +38,12 @@ class BasePageLocators:
     BREADCRUMB = ".breadcrumb"
 
     CONTINUE_BTN = "[data-qa='continue-button']"
+
+    SCROLL_UP_BTN = "#scrollUp"
+
+    @staticmethod
+    def select_card_by_id(card_id):
+        return f"[data-product-id='{card_id}']"
 
 class LeftSidebarLocators:
     LEFT_SIDEBAR = ".left-sidebar"
@@ -63,6 +69,8 @@ class MainPageLocators(BasePageLocators):
     CAROUSEL_SLIDER = "#slider-carousel.carousel.slide"
     COOKIE_BANNER = "div.fc-dialog.fc-choice-dialog"
     ACCEPT_COOKIE_BANNER_BTN = ".fc-cta-consent.fc-primary-button"
+    RECOMMENDED_ITEMS_BLOCK = ".recommended_items"
+    RECOMMENDED_ITEMS_LIST = ".item.active .col-sm-4"
 
 
 class LoginPageLocators(BasePageLocators):
@@ -98,6 +106,8 @@ class SignupPageLocators(BasePageLocators):
     ZIPCODE = "[data-qa=zipcode]"
     MOBILE_NUMBER = "[data-qa=mobile_number]"
     CREATE_ACCOUNT_BTN = "[data-qa=create-account]"
+
+
 
 class CreatedAccountPageLocators(BasePageLocators):
     ACCOUNT_CREATED_TITLE = "[data-qa=account-created]"
@@ -149,7 +159,6 @@ class ApiPageLocators(BasePageLocators):
 class CartItemLocators:
     CART_INFO = "#cart_info"
 
-
     @staticmethod
     def id_card(product_id):
         return f"#product-{product_id}"
@@ -176,9 +185,10 @@ class CartItemLocators:
 
 class CartPageLocators(BasePageLocators, CartItemLocators):
     EMPTY_CART = "#empty_cart"
-
-    CHECKOUT_BTN = ".btn-default.check_out"
+    CHECKOUT_BTN = "#do_action .check_out"
+    CHECKOUT_MODAL = "#checkoutModal"
     LOGIN_LINK_IN_CHECKOUT = "#checkoutModal [href='/login']"
+
 
     @staticmethod
     def delete_product_btn(product_id):
